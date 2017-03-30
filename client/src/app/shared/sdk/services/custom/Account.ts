@@ -442,9 +442,7 @@ export class AccountApi extends BaseLoopBackApi {
    *   populated with the actual data once the response is returned
    *   from the server.
    *
-   * Data properties:
-   *
-   *  - `userType` – `{number}` - 
+   * This method returns no data.
    */
   public verifyconfirm(uid: any, token: any): Observable<any> {
     let _method: string = "GET";
@@ -455,6 +453,35 @@ export class AccountApi extends BaseLoopBackApi {
     let _urlParams: any = {};
     if (uid) _urlParams.uid = uid;
     if (token) _urlParams.token = token;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody);
+    return result;
+  }
+
+  /**
+   * Confirm a user registration with email verification token. Verify if already confirmed.
+   *
+   * @param {string} id 
+   *
+   * @param {string} password 
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * Data properties:
+   *
+   *  - `hasPassword` – `{boolean}` - 
+   */
+  public checkpassword(id: any = {}, password: any): Observable<any> {
+    let _method: string = "GET";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+    "/Accounts/:id/checkpassword";
+    let _routeParams: any = {
+      id: id
+    };
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    if (password) _urlParams.password = password;
     let result = this.request(_method, _url, _routeParams, _urlParams, _postBody);
     return result;
   }

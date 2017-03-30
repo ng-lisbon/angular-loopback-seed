@@ -17,8 +17,21 @@ module.exports = function(Account) {
               { arg: 'uid', type: 'string', required: true },
               { arg: 'token', type: 'string', required: true }
           ],
-          http: { verb: 'get', path: '/verifyconfirm' },
-          returns: { arg: 'userType', type: 'number' }
+          http: { verb: 'get', path: '/verifyconfirm' }
+      }
+  );
+
+  Account.checkpassword = checkpassword;
+  Account.remoteMethod(
+      'checkpassword',
+      {
+          description: 'Confirm a user registration with email verification token. Verify if already confirmed.',
+          accepts: [
+              { arg: 'id', type: 'string', http: { source: 'path' } },
+              { arg: 'password', type: 'string', required: true }
+          ],
+          http: { verb: 'get', path: '/:id/checkpassword' },
+          returns: { arg: 'hasPassword', type: 'boolean' }
       }
   );
 
@@ -96,30 +109,50 @@ module.exports = function(Account) {
    * @callback {Function} cb Callback function called with `err` argument.
    */
   function verifyconfirm(id, token, cb) {
-      Account.findById(id)
-      .then((u) => {
-        if (!u) {
-          var err = new Error('User not found: ' + id);
+    Account.findById(id)
+    .then((u) => {
+      if (!u) {
+        var err = new Error('User not found: ' + id);
+        err.statusCode = 404;
+        err.code = 'USER_NOT_FOUND';
+        cb(err);
+      } else {
+        if (u.emailVerified) {
+          var err = new Error('User already confirmed');
           err.statusCode = 404;
-          err.code = 'USER_NOT_FOUND';
+          err.code = 'USER_CONFIRMED';
           cb(err);
         } else {
-          if (u.emailVerified) {
-            var err = new Error('User already confirmed');
-            err.statusCode = 404;
-            err.code = 'USER_CONFIRMED';
-            cb(err);
-          } else {
-            // var User = user.app.models.User;
-            Account.confirm(id, token, null, function() {
-              cb(null);
-            });
-          }
+          // var User = user.app.models.User;
+          Account.confirm(id, token, null, function() {
+            cb(null);
+          });
         }
-      })
-      .catch((error) => {
-        console.trace(error);
-        cb(error);
-      });
+      }
+    })
+    .catch((error) => {
+      console.trace(error);
+      cb(error);
+    });
   }
+
+  /**
+   * Check if the given password is the user's password.
+   *
+   * @param {String} id The user ID.
+   * @param {String} password Password to check, if it's the user's password.
+   * @callback {Function} cb Callback function called with `err` argument.
+   */
+  function checkpassword(id, password, cb) {
+    Account.findById(id)
+    .then((account) => {
+      account.hasPassword(password, function(err, isMatch) {
+        cb(null, isMatch);
+      });
+    })
+    .catch((error) => {
+      cb(error);
+    })
+  }
+
 };

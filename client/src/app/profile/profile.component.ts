@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
     private alertsService: AlertsService) { }
 
   onChangeMail(form: NgForm) {
-    this.accountService.setMailAddress(form.value)
+    this.accountService.setMailAddress(form.value.email, form.value.password)
     .subscribe(
       () => {
         this.userEmail = form.value.email;
@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit {
       },
       (error) => {
         let message = 'Please check if your new e-mail address is valid.';
-        if (error.code == 'auth/wrong-password') {
+        if (error.message == 'WrongPassword') {
           message = 'Please check your password.'
         }
         this.alertsService.addAlert({

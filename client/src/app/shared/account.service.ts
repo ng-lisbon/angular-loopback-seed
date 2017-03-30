@@ -69,24 +69,23 @@ export class AccountService {
     return this.loopBackAuth.getCurrentUserData().email;
   }
 
-  setMailAddress(newEmail: string): Observable<any> {
-    return new Observable();
-    // return this.angularFire.auth.first()
-    // .flatMap(
-    //   (auth) => {
-    //     const credential = firebase.auth.EmailAuthProvider.credential(
-    //       auth.auth.email, newUser.password
-    //     );
-    //     const authenticated = new Subject<FirebaseAuthState>();
-    //     auth.auth.reauthenticate(credential)
-    //     .then(() => authenticated.next(auth))
-    //     .catch((error) => authenticated.error(error));
-    //     return authenticated;
-    //   }
-    // )
-    // .flatMap(
-    //   (auth) => auth.auth.updateEmail(newUser.email)
-    // );
+  setMailAddress(newEmail: string, password: String): Observable<any> {
+    const userId = this.loopBackAuth.getCurrentUserId();
+    return this.accountApi.checkpassword(userId, password)
+    .flatMap(
+      (response) => {
+        if (response['hasPassword']) {
+          return this.accountApi.patchAttributes(userId, { email: newEmail });
+          // const observable = this.accountApi.updateAttributes(userId, { email: newEmail });
+          // observable.subscribe(
+          //   (account) => console.log(account)
+          // );
+          // return observable;
+        } else {
+          throw new Error('WrongPassword');
+        }
+      }
+    );
   }
 
   setPassword(oldPassword: string, newPassword: string): Observable<any> {
@@ -110,6 +109,6 @@ export class AccountService {
   }
 
   isAuthenticated(): boolean {
-    return this.loopBackAuth.getCurrentUserId() != null;
+    return this.accountApi.isAuthenticated();
   }
 }
