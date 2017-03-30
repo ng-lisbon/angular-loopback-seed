@@ -17,3 +17,21 @@
 coverage
 node_modules
 npm-debug.log
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+server/datasources.development.json
+dist/*
+!dist/.gitkeep
+
+# Client
+/client/tmp
+/client/node_modules
+# e2e
+/client/e2e/*.js
+/client/e2e/*.map
