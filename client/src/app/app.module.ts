@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 import { HeaderComponent } from './shared/header.component';
-import { AuthService } from './shared/auth.service';
+import { AccountService } from './shared/account.service';
 import { AuthGuard } from './shared/auth.guard';
 import { NotAuthGuard } from './shared/notauth.guard';
 import { HomeComponent } from './home.component';
@@ -30,7 +30,7 @@ import { SDKBrowserModule } from './shared/sdk/index';
     SDKBrowserModule.forRoot()
   ],
   providers: [
-    AuthService,
+    AccountService,
     AuthGuard,
     NotAuthGuard,
     AlertsService

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 import { AlertsService } from '../shared/alerts/alerts.service';
 
 @Component({
@@ -13,11 +13,11 @@ export class ProfileComponent implements OnInit {
   userEmail = '';
   alerts = [];
 
-  constructor(private authService: AuthService,
+  constructor(private accountService: AccountService,
     private alertsService: AlertsService) { }
 
   onChangeMail(form: NgForm) {
-    this.authService.setMailAddress(form.value)
+    this.accountService.setMailAddress(form.value)
     .subscribe(
       () => {
         this.userEmail = form.value.email;
@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onChangePassword(form: NgForm) {
-    this.authService.setPassword(form.value.oldPassword, form.value.password)
+    this.accountService.setPassword(form.value.oldPassword, form.value.password)
     .subscribe(
       () => {
         form.reset()
@@ -64,9 +64,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.getMailAddress().subscribe(
-      (email) => this.userEmail = email
-    )
+    this.userEmail = this.accountService.getMailAddress();
   }
 
 }

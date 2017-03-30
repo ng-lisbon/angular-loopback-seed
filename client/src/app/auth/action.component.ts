@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 import { AlertsService } from '../shared/alerts/alerts.service';
 
 @Component({
@@ -18,10 +18,10 @@ export class ActionComponent implements OnInit {
   oobCode: string;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private authService: AuthService, private alertsService: AlertsService) { }
+    private accountService: AccountService, private alertsService: AlertsService) { }
 
   onSetPassword(form: NgForm) {
-    this.authService.confirmPasswordReset(this.oobCode, form.value.password)
+    this.accountService.confirmPasswordReset(this.oobCode, form.value.password)
     .subscribe(
       () => {
         form.reset();
@@ -43,14 +43,14 @@ export class ActionComponent implements OnInit {
     const apiKey = queryParams['apiKey'];
     this.oobCode = queryParams['oobCode'];
     if (mode == 'verifyEmail') {
-      this.authService.verifyMail(this.oobCode, apiKey)
+      this.accountService.verifyMail(this.oobCode, apiKey)
       .subscribe(
         () => this.wasVerified = true,
         (error) => this.wasVerifiedError = true
       );
     } else if (mode == 'resetPassword') {
       const oobCode = queryParams['oobCode'];
-      this.authService.verifyPasswordReset(this.oobCode)
+      this.accountService.verifyPasswordReset(this.oobCode)
       .subscribe(
         () => this.wasPasswordReset = true,
         (error) => {

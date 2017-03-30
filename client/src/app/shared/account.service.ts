@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Account, AccessToken } from './sdk/models';
-import { AccountApi } from './sdk/services';
+import { AccountApi, LoopBackAuth } from './sdk/services';
 
 @Injectable()
-export class AuthService {
+export class AccountService {
   account: Account;
 
-  constructor(private accountApi: AccountApi) {
+  constructor(private accountApi: AccountApi,
+    private loopBackAuth: LoopBackAuth) {
   }
 
   registerUser(account: Account): Observable<Account> {
@@ -17,12 +18,6 @@ export class AuthService {
 
   verifyMail(userId: string, token: string): Observable<any> {
     return this.accountApi.verifyconfirm(userId, token);
-    // const auth = this.fbApp.auth();
-    // return auth.applyActionCode(oobCode)
-    // .catch((error) => {
-    //   console.log(error);
-    //   throw error;
-    // });
   }
 
   verifyPasswordReset(oobCode: string): Observable<any> {
@@ -47,26 +42,21 @@ export class AuthService {
     // return Observable.fromPromise(<Promise<any>>promise);
   }
 
-  loginUser(email, password): Observable<AccessToken> {
+  loginUser(email: string, password: string): Observable<AccessToken> {
     const account = new Account();
     account.email = email;
     account.password = password;
-    return this.accountApi.login(account);
-    // const promise = this.angularFire.auth.login(user)
-    // .catch((error) => {
-    //   console.log('Error in auth service, loginUser: ' + error);
-    //   throw error;
-    // });
-    // return Observable.fromPromise(<Promise<FirebaseAuthState>>promise);
+    const observable = this.accountApi.login(account);
+    observable.subscribe(
+      (accessToken) => {
+        console.log(accessToken);
+      }
+    );
+    return observable;
   }
 
   logout(): Observable<any> {
     return this.accountApi.logout();
-    // return this.angularFire.auth.logout()
-    // .catch((error) => {
-    //   console.log(error);
-    //   throw error;
-    // });
   }
 
   sendPasswordRequestMail(email: string): Observable<any> {
@@ -75,8 +65,8 @@ export class AuthService {
     // return Observable.fromPromise(<Promise<any>>auth.sendPasswordResetEmail(email));
   }
 
-  getMailAddress(): Observable<string> {
-    return new Observable();
+  getMailAddress(): string {
+    return this.loopBackAuth.getCurrentUserData().email;
   }
 
   setMailAddress(newEmail: string): Observable<any> {
@@ -120,15 +110,6 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.account != null;
-    // return this.angularFire.auth.map(
-    //   (auth) => {
-    //     if (auth == null) {
-    //       return false;
-    //     } else {
-    //       return true;
-    //     }
-    //   }
-    // );
+    return this.loopBackAuth.getCurrentUserId() != null;
   }
 }

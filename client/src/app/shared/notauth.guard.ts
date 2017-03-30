@@ -1,13 +1,13 @@
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 
 @Injectable()
 export class NotAuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private accountService: AccountService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return !this.authService.isAuthenticated();
+    return !this.accountService.isAuthenticated();
   }
 }

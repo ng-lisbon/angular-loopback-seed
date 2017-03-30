@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AlertsService } from '../../shared/alerts/alerts.service';
-import { AuthService } from '../../shared/auth.service';
+import { AccountService } from '../../shared/account.service';
 
 @Component({
   selector: 'app-confirm-email',
@@ -13,12 +13,12 @@ export class ConfirmEmailComponent implements OnInit {
   wasError = false;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private alertsService: AlertsService, private authService: AuthService) { }
+    private alertsService: AlertsService, private accountService: AccountService) { }
 
   ngOnInit() {
     const params = this.activatedRoute.snapshot.params;
     if (params.hasOwnProperty('userId') && params.hasOwnProperty('token')) {
-      this.authService.verifyMail(params['userId'], params['token'])
+      this.accountService.verifyMail(params['userId'], params['token'])
       .subscribe(
         () => this.wasError = false,
         (error) => {

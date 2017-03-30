@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 import { AlertsService} from '../shared/alerts/alerts.service';
 
 @Component({
@@ -13,11 +13,11 @@ import { AlertsService} from '../shared/alerts/alerts.service';
 export class LoginComponent implements OnInit {
   alerts = [];
 
-  constructor(private authService: AuthService, private router: Router,
+  constructor(private accountService: AccountService, private router: Router,
     private alertsService: AlertsService) { }
   
   onSubmit(loginForm: NgForm) {
-    this.authService.loginUser(loginForm.value.email, loginForm.value.password)
+    this.accountService.loginUser(loginForm.value.email, loginForm.value.password)
     .subscribe(
       (auth) => {
         this.router.navigate(['/profile'])

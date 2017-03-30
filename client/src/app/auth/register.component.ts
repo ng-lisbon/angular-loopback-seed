@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 import { AlertsService } from '../shared/alerts/alerts.service';
 import { Account } from '../shared/sdk/models';
 
@@ -14,7 +14,7 @@ import { Account } from '../shared/sdk/models';
 export class RegisterComponent implements OnInit {
   wasRegistered = false;
 
-  constructor(private authService: AuthService, private router: Router,
+  constructor(private accountService: AccountService, private router: Router,
     private alertsService: AlertsService) { }
 
   onSubmit(registerForm: NgForm) {
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
     account.password = registerForm.value.password;
     account.firstname = registerForm.value.firstname;
     account.lastname = registerForm.value.lastname;
-    this.authService.registerUser(account)
+    this.accountService.registerUser(account)
     .subscribe(
       (auth) => {
         this.wasRegistered = true

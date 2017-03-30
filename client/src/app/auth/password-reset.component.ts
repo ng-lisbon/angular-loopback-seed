@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { AuthService } from '../shared/auth.service';
+import { AccountService } from '../shared/account.service';
 import { AlertsService } from '../shared/alerts/alerts.service';
 
 @Component({
@@ -11,11 +11,11 @@ import { AlertsService } from '../shared/alerts/alerts.service';
 })
 export class PasswordResetComponent implements OnInit {
 
-  constructor(private authService: AuthService,
+  constructor(private accountService: AccountService,
     private alertsService: AlertsService) { }
 
   onSubmit(form: NgForm) {
-    this.authService.sendPasswordRequestMail(form.value.email)
+    this.accountService.sendPasswordRequestMail(form.value.email)
     .subscribe(
       () => {
         form.reset();
