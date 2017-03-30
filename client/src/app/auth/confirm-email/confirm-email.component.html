@@ -1,0 +1,13 @@
+<div *ngIf="!wasError else error">
+  <h1>Email confirmation</h1>
+  <p>
+    Your email address has been verified successfully! Please
+    <a [routerLink]="['/auth', 'login']">log in now</a>.
+  </p>
+</div>
+<ng-template #error>
+  <h1>Oops, something went wrong.</h1>
+  <p>
+     Please check the error message above.
+  </p>
+</ng-template>
