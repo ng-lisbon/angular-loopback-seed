@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import { Account, AccessToken } from './sdk/models';
 import { AccountApi, LoopBackAuth } from './sdk/services';
 
 @Injectable()
 export class AccountService {
-  account: Account;
+  authChange: Observable<AuthState>;
+
+  private authManager: BehaviorSubject<AuthState>;
+  private authState: AuthState;
 
   constructor(private accountApi: AccountApi,
-    private loopBackAuth: LoopBackAuth) {
+      private loopBackAuth: LoopBackAuth) {
+    if (this.accountApi.isAuthenticated()) {
+      this.authManager = new BehaviorSubject(AuthState.LoggedIn);
+    } else {
+      this.authManager = new BehaviorSubject(AuthState.LoggedOut);      
+    }
+    this.authChange = this.authManager.asObservable();
   }
 
   registerUser(account: Account): Observable<Account> {
@@ -46,17 +55,20 @@ export class AccountService {
     const account = new Account();
     account.email = email;
     account.password = password;
-    const observable = this.accountApi.login(account);
-    observable.subscribe(
-      (accessToken) => {
-        console.log(accessToken);
+    return this.accountApi.login(account)
+    .map(
+      (accessToken: AccessToken) => {
+        this.setAuthState(AuthState.LoggedIn);
+        return accessToken;
       }
     );
-    return observable;
   }
 
   logout(): Observable<any> {
-    return this.accountApi.logout();
+    return this.accountApi.logout()
+    .map(
+      () => this.setAuthState(AuthState.LoggedOut)
+    );
   }
 
   sendPasswordRequestMail(email: string): Observable<any> {
@@ -71,16 +83,12 @@ export class AccountService {
 
   setMailAddress(newEmail: string, password: String): Observable<any> {
     const userId = this.loopBackAuth.getCurrentUserId();
+    // TODO: Do password check server-side
     return this.accountApi.checkpassword(userId, password)
     .flatMap(
       (response) => {
         if (response['hasPassword']) {
           return this.accountApi.patchAttributes(userId, { email: newEmail });
-          // const observable = this.accountApi.updateAttributes(userId, { email: newEmail });
-          // observable.subscribe(
-          //   (account) => console.log(account)
-          // );
-          // return observable;
         } else {
           throw new Error('WrongPassword');
         }
@@ -89,26 +97,26 @@ export class AccountService {
   }
 
   setPassword(oldPassword: string, newPassword: string): Observable<any> {
-    return new Observable();
-    // return this.angularFire.auth.first()
-    // .flatMap(
-    //   (auth) => {
-    //     const credential = firebase.auth.EmailAuthProvider.credential(
-    //       auth.auth.email, oldPassword
-    //     );
-    //     const authenticated = new Subject<FirebaseAuthState>();
-    //     auth.auth.reauthenticate(credential)
-    //     .then(() => authenticated.next(auth))
-    //     .catch((error) => authenticated.error(error));
-    //     return authenticated;
-    //   }
-    // )
-    // .flatMap(
-    //   (auth) => auth.auth.updatePassword(newPassword)
-    // );
+    const userId = this.loopBackAuth.getCurrentUserId();
+    return this.accountApi.patchAttributes(userId, { password: newPassword,
+      oldPassword: oldPassword });
   }
 
   isAuthenticated(): boolean {
     return this.accountApi.isAuthenticated();
   }
+
+  emitAuthState() {
+    this.authManager.next(this.authState);
+  }
+
+  private setAuthState(newAuthState: AuthState) {
+    this.authState = newAuthState;
+    this.emitAuthState();
+  }
+}
+
+export const enum AuthState {
+  LoggedIn,
+  LoggedOut
 }

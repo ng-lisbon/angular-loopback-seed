@@ -8,6 +8,9 @@ module.exports = function(Account) {
 
   Account.afterRemote('create', sendVerificationMail);
 
+  // If this is a password change request then check the old password first
+  Account.beforeRemote( 'prototype.patchAttributes', checkOldPassword );
+
   Account.verifyconfirm = verifyconfirm;
   Account.remoteMethod(
       'verifyconfirm',
@@ -153,6 +156,44 @@ module.exports = function(Account) {
     .catch((error) => {
       cb(error);
     })
+  }
+
+
+  /**
+   * Before a password is changed we check the old password of the user. If
+   * the old password is correct then we change the password and send a mail
+   * to the user that the change was successful.
+   *
+   * @param {Object} ctx The current request context.
+   * @param {Object} instance The user instance with the new password.
+   * @callback {Function} cb Callback function called with `err` argument.
+   */
+  function checkOldPassword(ctx, instance, cb) {
+    console.log(ctx.args);
+    console.log(instance);
+    if (!ctx.isNewInstance && ctx.args.data && 'password' in ctx.args.data) {
+      if (!ctx.args.data.oldPassword) {
+        var error = new Error();
+        error.statusCode = 401;
+        cb(error);
+      } else {
+        console.log(instance);
+        Account.checkpassword(ctx.req.accessToken.userId,
+            ctx.args.data.oldPassword, function(err, isMatch) {
+          if (err) {
+            cb(err);
+          } else if (!isMatch) {
+            cb(new Error('WrongPassword'));
+          } else {
+            ctx.args.data.oldPassword = null;
+            delete ctx.args.data.oldPassword;
+            cb();
+          }
+        });
+      }
+    } else {
+      cb();
+    }
   }
 
 };

@@ -51,8 +51,8 @@ export class ProfileComponent implements OnInit {
         }, true);
       },
       (error) => {
-        let message = 'Please check that your new password contains at least 6 characters.';
-        if (error.code == 'auth/wrong-password') {
+        let message = 'Something went wrong. Please try again.';
+        if (error.message == 'WrongPassword') {
           message = 'Please check your old password.'
         }
         this.alertsService.addAlert({

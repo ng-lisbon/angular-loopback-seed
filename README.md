@@ -42,7 +42,6 @@ Run `npm start` for a dev server. Navigate to `http://localhost:3000/`. You
 need to start the frontend server, too, to see the application in the browser.
 
 ## Frontend
-
 Run `npm run start:ng` to generate the Angular frontend. This will start the
 CLI build process and put all Angular files in the `dist` folder, from which
 Loopback will serve the files. The process will keep running and watch the

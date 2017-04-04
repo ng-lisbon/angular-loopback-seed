@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AccountService } from './account.service';
+import { AccountService, AuthState } from './account.service';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +19,16 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isAuthenticated = this.accountService.isAuthenticated();
+    // this.isAuthenticated = this.accountService.isAuthenticated();
+    this.accountService.authChange.subscribe(
+      (authState: AuthState) => {
+        if (authState == AuthState.LoggedIn) {
+          this.isAuthenticated = true;
+        } else {
+          this.isAuthenticated = false;
+        }
+      }
+    )
   }
 
 }
