@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import { Account, AccessToken } from './sdk/models';
+import { Account, AccessToken, SDKToken } from './sdk/models';
 import { AccountApi, LoopBackAuth } from './sdk/services';
 
 @Injectable()
@@ -25,31 +25,20 @@ export class AccountService {
     return this.accountApi.create(account);
   }
 
+  setUser(token: string) {
+    const created = new Date();
+    const accessToken = new SDKToken();
+    accessToken.id = token;
+    this.loopBackAuth.setToken(accessToken);
+  }
+
   verifyMail(userId: string, token: string): Observable<any> {
     // TODO: Change to confirm method here and remove our own remote method
     return this.accountApi.verifyconfirm(userId, token);
   }
 
-  verifyPasswordReset(oobCode: string): Observable<any> {
-    return new Observable();
-    // const auth = this.fbApp.auth();
-    // const promise = auth.verifyPasswordResetCode(oobCode)
-    // .catch((error) => {
-    //   console.log(error);
-    //   throw error;
-    // });
-    // return Observable.fromPromise(<Promise<any>>promise);
-  }
-
-  confirmPasswordReset(oobCode: string, newPassword: string): Observable<any> {
-    return new Observable();
-    // const auth = this.fbApp.auth();
-    // const promise = auth.confirmPasswordReset(oobCode, newPassword)
-    // .catch((error) => {
-    //   console.log(error);
-    //   throw error;
-    // });
-    // return Observable.fromPromise(<Promise<any>>promise);
+  resetPassword(newPassword: string): Observable<any> {
+    return this.accountApi.resetPasswordChange(newPassword);
   }
 
   loginUser(email: string, password: string): Observable<AccessToken> {
@@ -73,7 +62,7 @@ export class AccountService {
   }
 
   sendPasswordRequestMail(email: string): Observable<any> {
-    return new Observable();
+    return this.accountApi.resetPassword({ email: email });
     // const auth = this.fbApp.auth();
     // return Observable.fromPromise(<Promise<any>>auth.sendPasswordResetEmail(email));
   }

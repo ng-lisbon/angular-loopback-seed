@@ -487,6 +487,37 @@ export class AccountApi extends BaseLoopBackApi {
   }
 
   /**
+   * Change the password using a token
+   *
+   * @param {object} data Request data.
+   *
+   *  - `password` – `{string}` - 
+   *
+   *  - `req` – `{object}` - 
+   *
+   *  - `res` – `{object}` - 
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * This method returns no data.
+   */
+  public resetPasswordChange(password: any = {}, req: any = {}, res: any = {}): Observable<any> {
+    let _method: string = "PUT";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+    "/Accounts/resetpasswordchange";
+    let _routeParams: any = {};
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    if (password) _urlParams.password = password;
+    if (req) _urlParams.req = req;
+    if (res) _urlParams.res = res;
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody);
+    return result;
+  }
+
+  /**
    * Creates a new instance in accessTokens of this model.
    *
    * @param {any} id Account id

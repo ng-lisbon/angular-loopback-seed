@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { AccountService } from '../shared/account.service';
-import { AlertsService } from '../shared/alerts/alerts.service';
+import { AccountService } from '../../shared/account.service';
+import { AlertsService } from '../../shared/alerts/alerts.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -21,7 +21,7 @@ export class PasswordResetComponent implements OnInit {
         form.reset();
         this.alertsService.addAlert({
           type: 'success',
-          message: 'An email to reset your password has been sent. Please check your inbox and click on the link to continue the reset process.'
+          message: 'An email to reset your password has been sent. Please check your inbox and click on the link to continue the reset process. The link is valid for 15 minutes.'
         }, true);
       }
     );

@@ -29,7 +29,13 @@
       "principalId": "$owner",
       "permission": "ALLOW",
       "property": "checkpassword"
-    }    
-  ],
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "resetPasswordChange"
+    }
+ ],
   "methods": {}
 }

@@ -6,19 +6,19 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
-import { ActionComponent } from './action.component';
 import { authRouting } from './auth.routing';
-import { PasswordResetComponent } from './password-reset.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { SharedModule } from '../shared/shared.module';
 import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
+import { PasswordResetConfirmComponent } from './password-reset/password-reset-confirm.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ActionComponent,
     PasswordResetComponent,
-    ConfirmEmailComponent
+    ConfirmEmailComponent,
+    PasswordResetConfirmComponent
   ],
   imports: [
     CommonModule,

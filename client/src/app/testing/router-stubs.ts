@@ -33,10 +33,6 @@ export class ActivatedRouteStub {
 
   // ActivatedRoute.snapshot.params
   get snapshot() {
-    // let params = {};
-    // if (this.testParams != null) {
-    //   params = this.testParams;
-    // }
     return { params: this.testParams };
   }
 }

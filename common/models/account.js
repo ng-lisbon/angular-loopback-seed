@@ -6,6 +6,9 @@ var config = require('../../server/config.json');
 
 module.exports = function(Account) {
 
+  //send password reset link when requested
+  Account.on('resetPasswordRequest', sendResetPasswordMail);
+
   Account.afterRemote('create', sendVerificationMail);
 
   // If this is a password change request then check the old password first
@@ -37,6 +40,21 @@ module.exports = function(Account) {
           returns: { arg: 'hasPassword', type: 'boolean' }
       }
   );
+
+    Account.resetPasswordChange = resetPasswordChange;
+    Account.remoteMethod(
+        'resetPasswordChange',
+        {
+            description: 'Change the password using a token',
+            accepts: [
+                { arg: 'password', type: 'string' },
+                { arg: 'req', type: 'object', http: { source: 'req' } },
+                { arg: 'res', type: 'object', http: { source: 'res' } }
+            ],
+            http: { verb: 'put', path: '/resetpasswordchange' }
+        }
+    );
+
 
 
 //  ###                                                                                            
@@ -192,5 +210,54 @@ module.exports = function(Account) {
       cb();
     }
   }
+
+  /**
+   * Send a link to the user when she requests to reset the password.
+   *
+   * @param {Object} info The account info with the e-mail address
+   */
+  function sendResetPasswordMail(info) {
+    var url = config.public_url + '/auth/password-reset/confirm/' +
+      info.accessToken.id;
+    var html = 'Click <a href="' + url + '">here</a> to reset your password';
+
+    Account.app.models.Email.send({
+      to: info.email,
+      from: config.email_from,
+      subject: 'Password reset',
+      html: html
+    }, (error) => {
+      if (error) {
+        console.trace(error);
+      }
+    });
+  }
+
+    /**
+     * Set the password of the user to a new password.
+     *
+     * @param {String} password The new, hashed password of the user.
+     * @param {Object} req The request object.
+     * @param {Object} res The result object.
+     * @callback {Function} cb Callback function called with `err` argument.
+     */
+    function resetPasswordChange(password, req, res, cb) {
+        if (!req.accessToken) {
+            console.trace('Error: No access token.');
+            return res.sendStatus(404);
+        }
+        Account.findById(req.accessToken.userId)
+        .then((account) => {
+          console.log(account);
+          return account.updateAttribute('password', password);
+        })
+        .then(() => {
+          cb();
+        })
+        .catch((error) => {
+          console.trace(error);
+          cb(error);
+        });
+    }
 
 };
