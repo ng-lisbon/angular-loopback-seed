@@ -169,15 +169,12 @@ module.exports = function(Account) {
    * @callback {Function} cb Callback function called with `err` argument.
    */
   function checkOldPassword(ctx, instance, cb) {
-    console.log(ctx.args);
-    console.log(instance);
     if (!ctx.isNewInstance && ctx.args.data && 'password' in ctx.args.data) {
       if (!ctx.args.data.oldPassword) {
         var error = new Error();
         error.statusCode = 401;
         cb(error);
       } else {
-        console.log(instance);
         Account.checkpassword(ctx.req.accessToken.userId,
             ctx.args.data.oldPassword, function(err, isMatch) {
           if (err) {

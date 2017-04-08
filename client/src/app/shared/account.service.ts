@@ -26,6 +26,7 @@ export class AccountService {
   }
 
   verifyMail(userId: string, token: string): Observable<any> {
+    // TODO: Change to confirm method here and remove our own remote method
     return this.accountApi.verifyconfirm(userId, token);
   }
 

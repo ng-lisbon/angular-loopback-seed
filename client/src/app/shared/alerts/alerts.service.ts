@@ -7,8 +7,6 @@ import { Alert } from './alert.interface';
 export class AlertsService {
   alerts: Alert[] = [];
 
-  constructor() { }
-
   getAlerts(): Alert[] {
     return this.alerts;
   }
