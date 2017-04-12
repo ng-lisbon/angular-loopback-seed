@@ -47,3 +47,7 @@ CLI build process and put all Angular files in the `dist` folder, from which
 Loopback will serve the files. The process will keep running and watch the
 files in the `client` folder, so whenever you change a file of the Angular
 frontend the files will be built again.
+
+# License
+This boilerplate is published under The MIT License. See LICENSE file for
+details.
