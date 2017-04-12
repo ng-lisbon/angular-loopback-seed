@@ -33,8 +33,7 @@ export class AccountService {
   }
 
   verifyMail(userId: string, token: string): Observable<any> {
-    // TODO: Change to confirm method here and remove our own remote method
-    return this.accountApi.verifyconfirm(userId, token);
+    return this.accountApi.confirm(userId, token);
   }
 
   resetPassword(newPassword: string): Observable<any> {
@@ -63,8 +62,6 @@ export class AccountService {
 
   sendPasswordRequestMail(email: string): Observable<any> {
     return this.accountApi.resetPassword({ email: email });
-    // const auth = this.fbApp.auth();
-    // return Observable.fromPromise(<Promise<any>>auth.sendPasswordResetEmail(email));
   }
 
   getMailAddress(): string {

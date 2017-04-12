@@ -14,19 +14,6 @@ module.exports = function(Account) {
   // If this is a password change request then check the old password first
   Account.beforeRemote( 'prototype.patchAttributes', checkOldPassword );
 
-  Account.verifyconfirm = verifyconfirm;
-  Account.remoteMethod(
-      'verifyconfirm',
-      {
-          description: 'Confirm a user registration with email verification token. Verify if already confirmed.',
-          accepts: [
-              { arg: 'uid', type: 'string', required: true },
-              { arg: 'token', type: 'string', required: true }
-          ],
-          http: { verb: 'get', path: '/verifyconfirm' }
-      }
-  );
-
   Account.checkpassword = checkpassword;
   Account.remoteMethod(
       'checkpassword',
@@ -119,42 +106,6 @@ module.exports = function(Account) {
           // html: html,
           text: txt
       });
-  }
-
-  /**
-   * Set the user to confirmed. This happens after the user clicked on the
-   * confirmation link in the mail that we send him after registration.
-   *
-   * @param {String} id The user ID.
-   * @param {String} token The confirmation token from the confirmation mail.
-   * @callback {Function} cb Callback function called with `err` argument.
-   */
-  function verifyconfirm(id, token, cb) {
-    Account.findById(id)
-    .then((u) => {
-      if (!u) {
-        var err = new Error('User not found: ' + id);
-        err.statusCode = 404;
-        err.code = 'USER_NOT_FOUND';
-        cb(err);
-      } else {
-        if (u.emailVerified) {
-          var err = new Error('User already confirmed');
-          err.statusCode = 404;
-          err.code = 'USER_CONFIRMED';
-          cb(err);
-        } else {
-          // var User = user.app.models.User;
-          Account.confirm(id, token, null, function() {
-            cb(null);
-          });
-        }
-      }
-    })
-    .catch((error) => {
-      console.trace(error);
-      cb(error);
-    });
   }
 
   /**
