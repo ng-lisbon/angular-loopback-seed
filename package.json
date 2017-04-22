@@ -4,10 +4,9 @@
   "main": "server/server.js",
   "scripts": {
     "lint": "eslint .",
-    "start": "node .",
-    "start:ng": "cd client && ng build -op ../dist/ -dev -w",
-    "posttest": "npm run lint && nsp check",
-    "build:sdk": "lb-sdk server/server.js client/src/app/shared/sdk"
+    "dev": "NODE_ENV=development node .",
+    "dev:ng": "npm run build:sdk && cd client && ng build -op ../dist/ -dev -w",
+    "build:sdk": "lb-sdk server/server.js client/src/app/shared/sdk -w enabled"
   },
   "dependencies": {
     "compression": "^1.0.3",
