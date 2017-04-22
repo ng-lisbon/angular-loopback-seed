@@ -2,9 +2,10 @@
 
 var loopback = require('loopback');
 var path = require('path');
-var config = require('../../server/config.json');
 
 module.exports = function(Account) {
+
+  Account.disableRemoteMethodByName('changePassword');
 
   //send password reset link when requested
   Account.on('resetPasswordRequest', sendResetPasswordMail);
@@ -68,7 +69,7 @@ module.exports = function(Account) {
       userInstance.verificationToken = token;
       userInstance.save()
       .then(() => {
-        return sendConfirmationEmail(userInstance);
+        return sendConfirmationEmail(userInstance, Account.app);
       })
       .then(() => {
         cb();
@@ -86,14 +87,14 @@ module.exports = function(Account) {
    * @param {Object} userInstance The user instance.
    * @callback {Function} cb Callback function called with `err` argument.
    */
-  function sendConfirmationEmail(userInstance) {
+  function sendConfirmationEmail(userInstance, app) {
       // var render = loopback.template(path.resolve(__dirname,
       //     '../../server/views/email/register-confirm-html.ejs'));
       var renderTxt = loopback.template( path.resolve(__dirname,
           '../../server/views/email/register-confirm-txt.ejs' ) );
       var options = {
           userFirstname: userInstance.firstname,
-          verifyUrl: config.public_url + '/auth/confirm-email/' +
+          verifyUrl: app.get('public_url') + '/auth/confirm-email/' +
             userInstance.id + '/' + userInstance.verificationToken
       };
       // var html = render(options);
@@ -101,7 +102,7 @@ module.exports = function(Account) {
 
       return Account.app.models.Email.send({
           to: userInstance.email,
-          from: config.email_from,
+          from: app.get('mail_from'),
           subject: 'Your account at our platform',
           // html: html,
           text: txt
@@ -168,13 +169,13 @@ module.exports = function(Account) {
    * @param {Object} info The account info with the e-mail address
    */
   function sendResetPasswordMail(info) {
-    var url = config.public_url + '/auth/password-reset/confirm/' +
+    var url = app.get('public_url') + '/auth/password-reset/confirm/' +
       info.accessToken.id;
     var html = 'Click <a href="' + url + '">here</a> to reset your password';
 
     Account.app.models.Email.send({
       to: info.email,
-      from: config.email_from,
+      from: app.get('mail_from'),
       subject: 'Password reset',
       html: html
     }, (error) => {
