@@ -61,7 +61,7 @@ module.exports = function(Account) {
    */  
   function sendVerificationMail(context, userInstance, cb) {
     var User = Account.app.models.User;
-    User.generateVerificationToken(userInstance, (error, token) => {
+    User.generateVerificationToken(userInstance, {}, (error, token) => {
       if (error) {
         cb(error);
         return;

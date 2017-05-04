@@ -320,10 +320,10 @@ export class AccountApi extends BaseLoopBackApi {
    *   populated with the actual data once the response is returned
    *   from the server.
    *
-   * The response body contains properties of the AccessToken created on login.
-   * Depending on the value of `include` parameter, the body may contain additional properties:
+   * Der Antworthauptteil enthält Eigenschaften des bei der Anmeldung erstellten AccessToken.
+   * Abhängig vom Wert des Parameters 'include' kann der Hauptteil zusätzliche Eigenschaften enthalten:
    * 
-   *   - `user` - `U+007BUserU+007D` - Data of the currently logged in user. (`include=user`)
+   *   - user - U+007BUserU+007D - Daten des derzeit angemeldeten Benutzers. (`include=user`)
    * 
    *
    */
@@ -377,7 +377,35 @@ export class AccountApi extends BaseLoopBackApi {
   }
 
   /**
-   * Confirm a user registration with email verification token.
+   * Trigger user's identity verification with configured verifyOptions
+   *
+   * @param {any} id Account id
+   *
+   * @param {object} data Request data.
+   *
+   * This method does not accept any data. Supply an empty object.
+   *
+   * @returns {object} An empty reference that will be
+   *   populated with the actual data once the response is returned
+   *   from the server.
+   *
+   * This method returns no data.
+   */
+  public verify(id: any): Observable<any> {
+    let _method: string = "POST";
+    let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
+    "/Accounts/:id/verify";
+    let _routeParams: any = {
+      id: id
+    };
+    let _postBody: any = {};
+    let _urlParams: any = {};
+    let result = this.request(_method, _url, _routeParams, _urlParams, _postBody);
+    return result;
+  }
+
+  /**
+   * Confirm a user registration with identity verification token.
    *
    * @param {string} uid 
    *
@@ -432,11 +460,11 @@ export class AccountApi extends BaseLoopBackApi {
   }
 
   /**
-   * Confirm a user registration with email verification token. Verify if already confirmed.
+   * Reset user's password via a password-reset token.
    *
-   * @param {string} uid 
+   * @param {object} data Request data.
    *
-   * @param {string} token 
+   *  - `newPassword` – `{string}` - 
    *
    * @returns {object} An empty reference that will be
    *   populated with the actual data once the response is returned
@@ -444,15 +472,14 @@ export class AccountApi extends BaseLoopBackApi {
    *
    * This method returns no data.
    */
-  public verifyconfirm(uid: any, token: any): Observable<any> {
-    let _method: string = "GET";
+  public setPassword(newPassword: any): Observable<any> {
+    let _method: string = "POST";
     let _url: string = LoopBackConfig.getPath() + "/" + LoopBackConfig.getApiVersion() +
-    "/Accounts/verifyconfirm";
+    "/Accounts/reset-password";
     let _routeParams: any = {};
     let _postBody: any = {};
     let _urlParams: any = {};
-    if (uid) _urlParams.uid = uid;
-    if (token) _urlParams.token = token;
+    if (newPassword) _urlParams.newPassword = newPassword;
     let result = this.request(_method, _url, _routeParams, _urlParams, _postBody);
     return result;
   }

@@ -17,30 +17,30 @@
     "dataSource": "mail"
   },
   "User": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": false
   },
   "ACL": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": false
   },
   "Account": {
-    "dataSource": "mongodb",
+    "dataSource": "postgres",
     "public": true
   }
 }

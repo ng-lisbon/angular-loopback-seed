@@ -2,28 +2,28 @@
 
 declare var Object: any;
 export interface AccountInterface {
-  "firstname": any;
-  "lastname": any;
-  "realm"?: any;
-  "username"?: any;
-  "password": any;
-  "email": any;
-  "emailVerified"?: any;
-  "verificationToken"?: any;
-  "id"?: any;
+  "firstname": string;
+  "lastname": string;
+  "realm"?: string;
+  "username"?: string;
+  "password": string;
+  "email": string;
+  "emailVerified"?: boolean;
+  "verificationToken"?: string;
+  "id"?: number;
   accessTokens?: any[];
 }
 
 export class Account implements AccountInterface {
-  "firstname": any;
-  "lastname": any;
-  "realm": any;
-  "username": any;
-  "password": any;
-  "email": any;
-  "emailVerified": any;
-  "verificationToken": any;
-  "id": any;
+  "firstname": string;
+  "lastname": string;
+  "realm": string;
+  "username": string;
+  "password": string;
+  "email": string;
+  "emailVerified": boolean;
+  "verificationToken": string;
+  "id": number;
   accessTokens: any[];
   constructor(data?: AccountInterface) {
     Object.assign(this, data);
@@ -58,39 +58,39 @@ export class Account implements AccountInterface {
       properties: {
         "firstname": {
           name: 'firstname',
-          type: 'any'
+          type: 'string'
         },
         "lastname": {
           name: 'lastname',
-          type: 'any'
+          type: 'string'
         },
         "realm": {
           name: 'realm',
-          type: 'any'
+          type: 'string'
         },
         "username": {
           name: 'username',
-          type: 'any'
+          type: 'string'
         },
         "password": {
           name: 'password',
-          type: 'any'
+          type: 'string'
         },
         "email": {
           name: 'email',
-          type: 'any'
+          type: 'string'
         },
         "emailVerified": {
           name: 'emailVerified',
-          type: 'any'
+          type: 'boolean'
         },
         "verificationToken": {
           name: 'verificationToken',
-          type: 'any'
+          type: 'string'
         },
         "id": {
           name: 'id',
-          type: 'any'
+          type: 'number'
         },
       },
       relations: {

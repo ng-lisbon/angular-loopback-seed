@@ -1,17 +1,13 @@
 {
-  "db": {
-    "name": "db",
-    "connector": "memory"
-  },
-  "mongodb": {
+  "postgres": {
     "host": "localhost",
-    "port": 0,
+    "port": 5432,
     "url": "",
     "database": "platform",
     "password": "",
-    "name": "mongodb",
-    "user": "",
-    "connector": "mongodb"
+    "name": "postgres",
+    "user": "postgres",
+    "connector": "postgresql"
   },
   "mail": {
     "name": "mail",

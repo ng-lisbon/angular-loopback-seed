@@ -4,7 +4,8 @@
   "main": "server/server.js",
   "scripts": {
     "lint": "eslint .",
-    "dev": "NODE_ENV=development node .",
+    "dev": "concurrently --kill-others --raw \"npm run dev:api\" \"npm run dev:ng\"",
+    "dev:api": "cross-env NODE_ENV=development node .",
     "dev:ng": "npm run build:sdk && cd client && ng build -op ../dist/ -dev -w",
     "build:sdk": "lb-sdk server/server.js client/src/app/shared/sdk -w enabled"
   },
@@ -15,12 +16,14 @@
     "loopback": "^3.0.0",
     "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "^4.0.0",
-    "loopback-connector-mongodb": "^1.18.1",
+    "loopback-connector-postgres": "^3.0.0",
     "serve-favicon": "^2.0.1",
     "strong-error-handler": "^1.0.1"
   },
   "devDependencies": {
     "@mean-expert/loopback-sdk-builder": "^2.1.0-rc.9",
+    "concurrently": "^3.4.0",
+    "cross-env": "^4.0.0",
     "eslint": "^2.13.1",
     "eslint-config-loopback": "^4.0.0",
     "nsp": "^2.1.0"
