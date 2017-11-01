@@ -4,7 +4,7 @@
     "port": 5432,
     "url": "",
     "database": "platform",
-    "password": "",
+    "password": "postgres",
     "name": "postgres",
     "user": "postgres",
     "connector": "postgresql"

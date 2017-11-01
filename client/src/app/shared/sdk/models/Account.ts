@@ -6,11 +6,10 @@ export interface AccountInterface {
   "lastname": string;
   "realm"?: string;
   "username"?: string;
-  "password": string;
   "email": string;
   "emailVerified"?: boolean;
-  "verificationToken"?: string;
   "id"?: number;
+  "password"?: string;
   accessTokens?: any[];
 }
 
@@ -19,11 +18,10 @@ export class Account implements AccountInterface {
   "lastname": string;
   "realm": string;
   "username": string;
-  "password": string;
   "email": string;
   "emailVerified": boolean;
-  "verificationToken": string;
   "id": number;
+  "password": string;
   accessTokens: any[];
   constructor(data?: AccountInterface) {
     Object.assign(this, data);
@@ -55,6 +53,7 @@ export class Account implements AccountInterface {
     return {
       name: 'Account',
       plural: 'Accounts',
+      path: 'Accounts',
       properties: {
         "firstname": {
           name: 'firstname',
@@ -72,10 +71,6 @@ export class Account implements AccountInterface {
           name: 'username',
           type: 'string'
         },
-        "password": {
-          name: 'password',
-          type: 'string'
-        },
         "email": {
           name: 'email',
           type: 'string'
@@ -84,13 +79,13 @@ export class Account implements AccountInterface {
           name: 'emailVerified',
           type: 'boolean'
         },
-        "verificationToken": {
-          name: 'verificationToken',
-          type: 'string'
-        },
         "id": {
           name: 'id',
           type: 'number'
+        },
+        "password": {
+          name: 'password',
+          type: 'string'
         },
       },
       relations: {

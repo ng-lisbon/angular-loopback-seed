@@ -14,7 +14,7 @@ Please adapt to your needs :)
 ## Install prerequisites
 
 You need a database for the Loopback backend. Per default the backend will use
-mongodb. So download and start mongodb before you start the app or change the
+postgres. So download and start postgres before you start the app or change the
 Loopback configuration.
 
 ## Configuration
